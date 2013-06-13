@@ -4,13 +4,14 @@ implicit none
 
 contains
 
- subroutine ReadReals(filename, vector, record)
+ subroutine ReadReals(filename, vector, length, record)
   implicit none
   integer,     parameter  :: ik = 8
 
   character(len=*),      intent(in)    :: filename
   real(8), dimension(:), intent(inout) :: vector
   integer(ik),           intent(in)    :: record 
+  integer(ik),           intent(in)    :: length 
 
   integer(ik), parameter :: idaf   = 10
   integer(ik), parameter :: irecln = 4090
@@ -18,11 +19,10 @@ contains
   integer(ik)                 :: irecst, is, ipk
   integer(ik), dimension(950) :: ioda, ifilen
 
-
     open(unit=idaf,file=trim(filename),access='direct',recl=8*irecln,form='unformatted')
     read(idaf,rec=1) irecst, ioda, ifilen, is, ipk
 
-    call daread(idaf, record, ioda, ifilen, irecln, vector, int(size(vector), kind=ik))
+    call daread(idaf, record, ioda, ifilen, irecln, vector, length)
 
     close(unit=idaf)
  end subroutine ReadReals
@@ -38,7 +38,7 @@ contains
 
 ! local variables
 
-  integer(ik) :: n, ns, is, nsp, fi, lent, lenw   
+  integer(ik) :: n, ns, is, nsp, fi, lent, lenw 
 
     n = ioda(nrec)
 
@@ -79,28 +79,3 @@ contains
  end subroutine daread 
 
 end module dictionary
-
-!===============================================================================
-! Test Program
-!===============================================================================
-!
-!program test 
-! use dictionary
-!  implicit none
-!  real(8), dimension(4) :: occ
-!  character(len=100)   :: filename, recname
-!  integer(8)           :: i, nrec, length
-!
-!! specify the dictionary filename
-!    filename = "h2_midi_0.7.F10"
-!
-!    nrec = 21
-!    recname = 'occupations'
-!    length = 4
-!
-!    call ReadReals(filename, occ, recname)
-!
-!    do i = 1, length
-!        write(*,*) i ,occ(i)
-!    enddo
-!end program
