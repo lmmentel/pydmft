@@ -8,6 +8,7 @@ import matplotlib.pyplot as mplot
 import os
 import re
 import sys
+from scipy.optimize import minimize
 
 def get_coulomb_1rdm(occ, twoe):
     '''Calculate the exact coulomb energy and return the matrix already
@@ -63,7 +64,7 @@ def get_els_matrix(nocc, twoeno, homo):
         for j in xrange(i):
             if i < homo and j < homo:
                 els[i, j] = -0.25*nocc[i]*nocc[j]*twoeno[ijkl(i,j,i,j)] +\
-                             0.5*nocc[i]*nocc[j]*twoemo[ijkl(i,i,j,j)]
+                             0.5*nocc[i]*nocc[j]*twoeno[ijkl(i,i,j,j)]
                 els[j, i] = els[i, j]
             elif j == homo and i > homo:
                 els[i, j] = -0.5*np.sqrt(nocc[i]*nocc[j])*twoeno[ijkl(i,j,i,j)] 
@@ -86,7 +87,7 @@ def get_else_matrix(nocc, twoeno, homo, a, b):
         for j in xrange(i):
             if i < homo and j < homo:
                 els[i, j] = -0.25*nocc[i]*nocc[j]*twoeno[ijkl(i,j,i,j)] +\
-                             0.5*nocc[i]*nocc[j]*twoemo[ijkl(i,i,j,j)]
+                             0.5*nocc[i]*nocc[j]*twoeno[ijkl(i,i,j,j)]
                 els[j, i] = els[i, j]
             elif j == homo and i > homo:
                 els[i, j] = -0.5*np.sqrt(nocc[i]*nocc[j])*twoeno[ijkl(i,j,i,j)] 
@@ -111,17 +112,16 @@ def decompose(ematrix, homo):
     o_offdiagonal = np.sum(ematrix[homo:, homo:]) - np.trace(ematrix[homo:, homo:])
     io = 2.0*np.sum(ematrix[homo:, :homo])
     total    = np.sum(ematrix)
-    print "Inner Diagonal    : {0:15.10f}".format(i_diagonal)
-    print "Inner Offdiagonal : {0:15.10f}".format(i_offdiagonal)
-    print
-    print "Outer Diagonal    : {0:15.10f}".format(o_diagonal)
-    print "Outer Offdiagonal : {0:15.10f}".format(o_offdiagonal)
-    print 
-    print "Inner-Outer       : {0:15.10f}".format(io)
-    print "{0:s}".format("-"*35)
-    print "Diagonal          : {0:15.10f}".format(diagonal)
-    print "Total             : {0:15.10f}".format(total)
+    return {"inner diagonal"    : i_diagonal,
+            "inner offdiagonal" : i_offdiagonal,
+            "outer diagonal"    : o_diagonal,
+            "outer offdiagonal" : o_offdiagonal,
+            "inner-outer"       : io,
+            "total"             : total}
 
+def print_components(comps_dict):
+    for key in sorted(comps_dict.iterkeys()):
+        print "{0:<25s} : {1:>15.10f}".format(key, comps_dict[key])
 
 def qoly(poly, arg):
     return poly(arg)**2/(1.0 + poly(arg)**2)
@@ -132,63 +132,84 @@ def pade_ac3(a, b, arg):
     p      = np.poly1d(coeffs)
     return p(arg)**2/(1.0 + p(arg)**2)
 
+def contains(theString,theQuery):
+    return theString.find(theQuery) > -1
+
+def get_fci():
+
+    filenames = []
+    for (path, dirs, files) in os.walk(os.getcwd()):
+        for fileItem in files:
+            if contains(fileItem, 'NO.log'):
+                filenames.append(os.path.join(path,fileItem))    
+    energies = []
+    for file in filenames:
+        dir, log = os.path.split(file)
+        os.chdir(dir)
+        gamess = Gamess(log)
+        print log, gamess.get_number_of_aos(), gamess.homo 
+        twoemo = gamess.get_motwoe()
+        rdm2   = gamess.get_rdm2()
+        nbf    = gamess.mos
+        exact_j, exact_k = get_exact_jk(rdm2, twoemo, nbf)
+        exact_njk = get_exact_nonjk(rdm2, twoemo, nbf)
+        dd = decompose(exact_j+exact_k+exact_njk, gamess.homo)
+        energies.append({file : dd["inner-outer"]})
+        print "\n{1}\nExact for {0}\n{1}\n".format(log, "="*(len(log)+10)) 
+        print_components(dd)
+    return energies
+
+def get_error(x0, *args):
+    
+    jobs = args[0]
+    diffs = []
+    for job in jobs:
+        filepath = job.keys()[0]
+        energy   = job[filepath]
+        dir, file = os.path.split(filepath)
+        os.chdir(dir)
+        gamess = Gamess(file)
+        twoeno = gamess.get_motwoe()
+        nbf    = gamess.mos
+        nocc   = gamess.get_occupations()
+        els    = get_else_matrix(nocc, twoeno, gamess.homo, x0[0], x0[1])
+        dd     = decompose(els, gamess.homo)
+        diffs.append(energy-dd["inner-outer"])
+        print "\n{1}\nELS for {0}\n{1}\n".format(file, "="*(len(file)+8)) 
+        print_components(dd)
+    diffs = np.asarray(diffs)
+    error = np.sqrt(np.add.reduce(diffs*diffs))
+    print "Error = {e:>14.10f}  Parameters: {p:s}".format(e=error, p="  ".join(["{:>14.10f}".format(x) for x in x0]))
+    print "-"*106
+    return error
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("logfile",
-                        help = "gamess-us log file with two electron integrals")
+                        help = "gamess-us log file")
     args = parser.parse_args()
 
-#    x  = np.arange(-0.5, 0.51, 0.01)
-#    y  = pade_ac3(2.0, 3.0, x)
-#    y1 = pade_ac3(16.8212438522, 2.61112559818e-04, x)
-#    mplot.plot(x, y)
-#    mplot.plot(x, y1)
-#    mplot.show() 
+    x0 = np.array([-46.71847635, -0.18830162])
 
     gamess = gamessus.GamessParser(args.logfile)
 
     twoemo = gamess.read_twoemo()
     rdm2   = gamess.read_rdm2()
-    occ = gamess.read_occupations()
+    occ    = gamess.read_occupations()
 
-    nbf = gamess.get_number_of_mos()   
-    
-    a = 16.8212438522e00
-    b = 2.61112559818e-04
+    nbf = gamess.get_number_of_mos()  
+    for i in xrange(nbf):
+        print "{0:5d} {1:24.14f} {2:24.14f} {3:24.14f}".format(i+1, rdm2[ijkl(i,i,i,i)], occ[i], occ[i]**2-occ[i])
 
-    coulomb = get_coulomb_1rdm(occ, twoemo)
-    els_ee  = get_els_matrix(occ, twoemo, 1)
-    else_ee = get_else_matrix(occ, twoemo, 1, a, b)
-    print "\n{0}\nExact Coulomb\n{0}\n".format("="*13) 
-    decompose(coulomb, 1)
-    print "\n{0}\nXC ELS\n{0}\n".format("="*6) 
-    decompose(els_ee-coulomb, 1)
-    print "\n{0}\nTotal ELS\n{0}\n".format("="*9) 
-    decompose(els_ee, 1)
-    print "\n{0}\nTotal ELSE\n{0}\n".format("="*10) 
-    decompose(else_ee, 1)
-    exact_j, exact_k = get_exact_jk(rdm2, twoemo, nbf)
-    exact_njk = get_exact_nonjk(rdm2, twoemo, nbf)
-    print "\n{0}\nExact non-JK\n{0}\n".format("="*12) 
-    decompose(exact_j+exact_k+exact_njk, 1)
-    
+#================================
+# example of post-ci optimization
+#================================
+#    x0 = np.array([a,b])
+#    energies = get_fci()
+#    print energies
 
-#    x = np.arange(nbf)
-#    gamma = np.zeros(nbf, dtype=float)
-#    for i in xrange(nbf):
-#        print "{0:4d} {1:15.10f} {2:15.10f}".format(x[i], occ[i], rdm2[ijkl(i,i,i,i)]) 
- #       gamma[i] = rdm2[ijkl(i,i,i,i)]
-      
-#    mplot.plot(x, gamma-occ, 'bo')
-#    mplot.grid(True)
-#    mplot.rc('text', usetex=True)
-#    mplot.rc('font', family='serif')
-#    mplot.title(r'Difference n_i - Gamma_iiii')
-#    mplot.xlabel(r'Orbital')
-#    mplot.ylabel(r'Difference')
-#    mplot.plot(x, gamma-np.multiply(occ,occ))
-#    mplot.show() 
+#    res = minimize(get_error, x0, args=(energies,), method='Nelder-Mead')
+#    print res.x
 
-#    print "E_ee = {0:25.14f}".format(0.5*np.sum(np.multiply(twoemo, rdm2)))
 if __name__ == "__main__":
     main()
