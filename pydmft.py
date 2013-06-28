@@ -1,14 +1,17 @@
 #!/usr/bin/env python
 
-import argparse
-import gamessus 
 from integrals import factor, ijkl
+from scipy.optimize import minimize
+import argparse
+import basis
+import gamessus
+import math
+import matplotlib.pyplot as mplot
+import molecule
 import numpy as np
-import matplotlib.pyplot as mplot 
 import os
 import re
 import sys
-from scipy.optimize import minimize
 
 def get_coulomb_1rdm(occ, twoe):
     '''Calculate the exact coulomb energy and return the matrix already
@@ -78,6 +81,29 @@ def get_els_matrix(nocc, twoeno, homo):
                 els[j, i] = els[i, j]
     return els
 
+def get_elslin_matrix(nocc, twoeno, homo):
+    '''Calculate the energy matrix from the ELS functional.'''
+    els = np.zeros((nocc.size, nocc.size), dtype=float)
+
+    for i in xrange(nocc.size):
+        els[i, i] = 0.5*nocc[i]*twoeno[ijkl(i,i,i,i)]
+        for j in xrange(i):
+            if i < homo and j < homo:
+                els[i, j] = -0.25*nocc[i]*nocc[j]*twoeno[ijkl(i,j,i,j)] +\
+                             0.5*nocc[i]*nocc[j]*twoeno[ijkl(i,i,j,j)]
+                els[j, i] = els[i, j]
+            elif j == homo and i > homo:
+                els[i, j] = -0.5*np.sqrt(nocc[i]*nocc[j])*twoeno[ijkl(i,j,i,j)] 
+                els[j, i] = els[i, j]
+            elif j > homo and i > homo:
+                els[i, j] = 0.5*np.sqrt(nocc[i]*nocc[j])*twoeno[ijkl(i,j,i,j)] 
+                els[j, i] = els[i, j]
+            else:
+                els[i, j] = -0.25*nocc[i]*nocc[j]*twoeno[ijkl(i,j,i,j)] +\
+                           0.5*nocc[i]*nocc[j]*twoeno[ijkl(i,i,j,j)] 
+                els[j, i] = els[i, j]
+    return els
+
 def get_else_matrix(nocc, twoeno, homo, a, b):
     '''Calculate the energy matrix from the ELS functional.'''
     els = np.zeros((nocc.size, nocc.size), dtype=float)
@@ -103,6 +129,51 @@ def get_else_matrix(nocc, twoeno, homo, a, b):
                 els[j, i] = els[i, j]
     return els
 
+def get_functional12_matrix(nocc, twoeno, homo, a, b):
+    '''Calculate the energy matrix from the ELS12 functional.'''
+    els = np.zeros((nocc.size, nocc.size), dtype=float)
+
+    for i in xrange(nocc.size):
+        els[i, i] = 0.5*nocc[i]*twoeno[ijkl(i,i,i,i)]
+        for j in xrange(i):
+            if i < homo and j < homo:
+                els[i, j] = -0.25*nocc[i]*nocc[j]*twoeno[ijkl(i,j,i,j)] +\
+                             0.5*nocc[i]*nocc[j]*twoeno[ijkl(i,i,j,j)]
+                els[j, i] = els[i, j]
+            elif j == homo and i > homo:
+                els[i, j] = -0.5*np.sqrt(nocc[i]*nocc[j])*twoeno[ijkl(i,j,i,j)] 
+                els[j, i] = els[i, j]
+            elif j > homo and i > homo:
+                els[i, j] = 0.5*np.sqrt(nocc[i]*nocc[j])*twoeno[ijkl(i,j,i,j)] 
+                els[j, i] = els[i, j]
+            else:
+                els[i, j] = (-a*0.5*np.sqrt(nocc[i]*nocc[j])-b*0.25*nocc[i]*nocc[j])*twoeno[ijkl(i,j,i,j)] +\
+                           0.5*nocc[i]*nocc[j]*twoeno[ijkl(i,i,j,j)] 
+                els[j, i] = els[i, j]
+    return els
+
+def get_functional12sin_matrix(nocc, twoeno, homo, a):
+    '''Calculate the energy matrix from the ELS12 functional.'''
+    els = np.zeros((nocc.size, nocc.size), dtype=float)
+
+    for i in xrange(nocc.size):
+        els[i, i] = 0.5*nocc[i]*twoeno[ijkl(i,i,i,i)]
+        for j in xrange(i):
+            if i < homo and j < homo:
+                els[i, j] = -0.25*nocc[i]*nocc[j]*twoeno[ijkl(i,j,i,j)] +\
+                             0.5*nocc[i]*nocc[j]*twoeno[ijkl(i,i,j,j)]
+                els[j, i] = els[i, j]
+            elif j == homo and i > homo:
+                els[i, j] = -0.5*np.sqrt(nocc[i]*nocc[j])*twoeno[ijkl(i,j,i,j)] 
+                els[j, i] = els[i, j]
+            elif j > homo and i > homo:
+                els[i, j] = 0.5*np.sqrt(nocc[i]*nocc[j])*twoeno[ijkl(i,j,i,j)] 
+                els[j, i] = els[i, j]
+            else:
+                els[i, j] = (-(1.0-math.sin(a)**2)*0.5*np.sqrt(nocc[i]*nocc[j])-math.sin(a)**2*0.25*nocc[i]*nocc[j])*twoeno[ijkl(i,j,i,j)] +\
+                           0.5*nocc[i]*nocc[j]*twoeno[ijkl(i,i,j,j)] 
+                els[j, i] = els[i, j]
+    return els
 
 def decompose(ematrix, homo):
     diagonal = np.trace(ematrix)
@@ -119,9 +190,12 @@ def decompose(ematrix, homo):
             "inner-outer"       : io,
             "total"             : total}
 
-def print_components(comps_dict):
+def print_components(comps_dict, name=None):
     for key in sorted(comps_dict.iterkeys()):
-        print "{0:<25s} : {1:>15.10f}".format(key, comps_dict[key])
+        if name:
+            print "{0:<30s} {1:<25s} : {2:>15.10f}".format(name, key, comps_dict[key])
+        else:
+            print "{0:<25s} : {1:>15.10f}".format(key, comps_dict[key])
 
 def qoly(poly, arg):
     return poly(arg)**2/(1.0 + poly(arg)**2)
@@ -135,28 +209,39 @@ def pade_ac3(a, b, arg):
 def contains(theString,theQuery):
     return theString.find(theQuery) > -1
 
-def get_fci():
+def get_fci(testset=None):
 
-    filenames = []
-    for (path, dirs, files) in os.walk(os.getcwd()):
-        for fileItem in files:
-            if contains(fileItem, 'NO.log'):
-                filenames.append(os.path.join(path,fileItem))    
+    filenames = testset
+    #    for (path, dirs, files) in os.walk(os.getcwd()):
+    #        for fileItem in files:
+    #            if contains(fileItem, 'NO.log'):
+    #                filenames.append(os.path.join(path,fileItem))    
     energies = []
     for file in filenames:
         dir, log = os.path.split(file)
         os.chdir(dir)
-        gamess = Gamess(log)
-        print log, gamess.get_number_of_aos(), gamess.homo 
-        twoemo = gamess.get_motwoe()
-        rdm2   = gamess.get_rdm2()
-        nbf    = gamess.mos
+        gamess = gamessus.GamessParser(log)
+        print log, 
+        twoemo = gamess.read_twoemo()
+        rdm2   = gamess.read_rdm2()
+        nbf    = gamess.get_number_of_mos()
         exact_j, exact_k = get_exact_jk(rdm2, twoemo, nbf)
         exact_njk = get_exact_nonjk(rdm2, twoemo, nbf)
-        dd = decompose(exact_j+exact_k+exact_njk, gamess.homo)
+        dd = decompose(exact_j+exact_k+exact_njk, gamess.get_homo())
         energies.append({file : dd["inner-outer"]})
         print "\n{1}\nExact for {0}\n{1}\n".format(log, "="*(len(log)+10)) 
         print_components(dd)
+    return energies
+
+def get_fci_energies(testset=None):
+
+
+    energies = []
+    for fileitem in testset:
+        dir, log = os.path.split(fileitem)
+        os.chdir(dir)
+        gp = gamessus.GamessParser(log)
+        energies.append([fileitem, gp.get_ci_ee_energy()])
     return energies
 
 def get_error(x0, *args):
@@ -164,18 +249,18 @@ def get_error(x0, *args):
     jobs = args[0]
     diffs = []
     for job in jobs:
-        filepath = job.keys()[0]
-        energy   = job[filepath]
-        dir, file = os.path.split(filepath)
+        filepath = job[0]
+        energy   = job[1]
+        dir, log = os.path.split(filepath)
         os.chdir(dir)
-        gamess = Gamess(file)
-        twoeno = gamess.get_motwoe()
-        nbf    = gamess.mos
-        nocc   = gamess.get_occupations()
-        els    = get_else_matrix(nocc, twoeno, gamess.homo, x0[0], x0[1])
-        dd     = decompose(els, gamess.homo)
-        diffs.append(energy-dd["inner-outer"])
-        print "\n{1}\nELS for {0}\n{1}\n".format(file, "="*(len(file)+8)) 
+        gamess = gamessus.GamessParser(log)
+        twoeno = gamess.read_twoemo()
+        nocc   = gamess.read_occupations()
+        els    = get_functional12sin_matrix(nocc, twoeno, gamess.get_homo(), x0[0])
+        dd     = decompose(els, gamess.get_homo())
+        diffs.append(energy-dd["total"])
+        print "\n{1}\nELS for {0}\n{1}\n".format(log, "="*(len(log)+8)) 
+        print "Exact:  {0:>14.10f}  Approximate:  {1:>14.10f}".format(energy, dd["total"])
         print_components(dd)
     diffs = np.asarray(diffs)
     error = np.sqrt(np.add.reduce(diffs*diffs))
@@ -183,33 +268,105 @@ def get_error(x0, *args):
     print "-"*106
     return error
 
+
+def run_postci_pes(x0):
+
+    bs = basis.Basis("/home/lmentel/work/Basis_Sets/EMSL", "cc-pvtz")
+
+    lih_distances = [2.00, 2.10, 2.20, 2.30, 2.40, 2.50, 2.60, 2.70, 2.80, 2.90, 
+                 3.00, 3.10, 3.20, 3.30, 3.40, 3.50, 3.60, 3.70, 3.80, 3.90, 
+                 4.00, 4.50, 5.00, 5.50, 6.00, 7.00, 8.00, 9.00, 10.00]
+    behp_distances = [1.80, 2.10, 2.30, 2.50, 2.70, 2.90, 3.20, 3.50, 4.00, 4.50, 
+                  5.00, 6.00, 7.00, 8.00, 9.00, 10.00]
+    li2_distances = [2.50, 3.00, 3.50, 4.00, 4.50, 4.75, 5.05, 5.25, 5.50, 6.00,
+                 7.00, 8.00, 9.00, 10.00, 11.00, 12.00, 14.00, 16.00]
+
+    molecules = []
+    jobs = []
+    #for d in lih_distances:    
+    #    molecules.append(molecule.Molecule('LiH', [(1, (0.0, 0.0, 0.0)), (3, (0.0, 0.0, d))], unique=[0,1]))
+
+    for d in li2_distances:    
+        molecules.append(molecule.Molecule('Li2', [(3, (0.0, 0.0, -d/2.0)), (3, (0.0, 0.0, d/2.0))], unique=[0]))
+
+    #for d in behp_distances:    
+    #    molecules.append(molecule.Molecule('BeHp', [(4, (0.0, 0.0, -d/2.0)), (1, (0.0, 0.0, d/2.0))], unique=[0,1], charge=1))
+
+
+    for mol in molecules:
+        title = "_".join([mol.name, bs.name, str(mol.get_distance(0,1))]) + ".inp" 
+        jobs.append(gamessus.Gamess(mol, bs, title))
+
+
+    for job in jobs:
+        os.chdir(job.filebase)
+        gp = gamessus.GamessParser(job.outputfile.replace(".log", "_NO.log"))
+        twoeno = gp.read_twoemo()
+        nocc   = gp.read_occupations()
+        #rdm2   = gp.read_rdm2()
+        #nbf    = gp.get_number_of_mos()
+        #exj, exk = get_exact_jk(twoeno, rdm2, nbf)
+        #exnjk = get_exact_nonjk(twoeno, rdm2, gp.get_number_of_mos())
+        em = get_functional12_matrix(nocc, twoeno, gp.get_homo(), x0[0], x0[1])
+        dd = decompose(em, gp.get_homo())
+        #dd = decompose(exj+exk+exnjk, gp.get_homo())
+        print_components(dd, gp.logname)
+        print "-"*100
+        os.chdir("..")
+#    for job in jobs:
+#        os.chdir(job.filebase)
+#        gp = gamessus.GamessParser(job.outputfile)
+#        print gp.logname, "electron-electron energy : ", gp.get_ci_ee_energy()
+#        os.chdir("..")
+
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("logfile",
-                        help = "gamess-us log file")
-    args = parser.parse_args()
+#    parser = argparse.ArgumentParser()
+#    parser.add_argument("logfile",
+#                        help = "gamess-us log file")
+#    args = parser.parse_args()
+#
+#    x0 = np.array([-46.71847635, -0.18830162])
+#
+#    gamess = gamessus.GamessParser(args.logfile)
+#
+#    twoemo = gamess.read_twoemo()
+#    rdm2   = gamess.read_rdm2()
+#    occ    = gamess.read_occupations()
+#
+#    nbf = gamess.get_number_of_mos()  
+#    for i in xrange(nbf):
+#        print "{0:5d} {1:24.14f} {2:24.14f} {3:24.14f}".format(i+1, rdm2[ijkl(i,i,i,i)], occ[i], occ[i]**2-occ[i])
+#===============================
 
-    x0 = np.array([-46.71847635, -0.18830162])
-
-    gamess = gamessus.GamessParser(args.logfile)
-
-    twoemo = gamess.read_twoemo()
-    rdm2   = gamess.read_rdm2()
-    occ    = gamess.read_occupations()
-
-    nbf = gamess.get_number_of_mos()  
-    for i in xrange(nbf):
-        print "{0:5d} {1:24.14f} {2:24.14f} {3:24.14f}".format(i+1, rdm2[ijkl(i,i,i,i)], occ[i], occ[i]**2-occ[i])
+#    x0 = np.array([0.0034479770, -0.2030708415])
+#    x1 = np.array([1.24272955, -0.65560724])
+#    run_postci_pes(x1)
 
 #================================
 # example of post-ci optimization
 #================================
-#    x0 = np.array([a,b])
-#    energies = get_fci()
-#    print energies
 
-#    res = minimize(get_error, x0, args=(energies,), method='Nelder-Mead')
-#    print res.x
+    testset =[
+        "/home/lmentel/work/jobs/dmft/LiH_cc-pvtz_3.0/LiH_cc-pvtz_3.0_NO.log",
+        "/home/lmentel/work/jobs/dmft/LiH_cc-pvtz_5.0/LiH_cc-pvtz_5.0_NO.log",
+        "/home/lmentel/work/jobs/dmft/LiH_cc-pvtz_9.0/LiH_cc-pvtz_9.0_NO.log",
+        "/home/lmentel/work/jobs/dmft/BeHp_cc-pvtz_2.5/BeHp_cc-pvtz_2.5_NO.log",
+        "/home/lmentel/work/jobs/dmft/BeHp_cc-pvtz_4.0/BeHp_cc-pvtz_4.0_NO.log",
+        "/home/lmentel/work/jobs/dmft/BeHp_cc-pvtz_8.0/BeHp_cc-pvtz_8.0_NO.log",
+        "/home/lmentel/work/jobs/dmft/Li2_cc-pvtz_5.05/Li2_cc-pvtz_5.05_NO.log",
+        "/home/lmentel/work/jobs/dmft/Li2_cc-pvtz_8.0/Li2_cc-pvtz_8.0_NO.log",
+        "/home/lmentel/work/jobs/dmft/Li2_cc-pvtz_12.0/Li2_cc-pvtz_12.0_NO.log"
+        ]
+#
+    x0 = np.array([1.4])
+    energies = get_fci_energies(testset)
+    for e in energies:
+        print e
+
+#    get_error(x0, energies)
+
+    res = minimize(get_error, x0, args=(energies,), method='BFGS', jac=False)
+    print res.x
 
 if __name__ == "__main__":
     main()
