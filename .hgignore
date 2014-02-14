@@ -4,6 +4,7 @@ example/**
 *.x
 *.a
 *.so
+*.pyc
 # ingnore vim .swp files
 .*.swp
 # ignore the .mod files
