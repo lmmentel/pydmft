@@ -1,0 +1,25 @@
+ $CONTRL 
+     scftyp=rhf 
+     runtyp=energy 
+     maxit=30  
+     mult=1  
+     ispher=-1 
+     units=bohr 
+     cityp=guga 
+ $END 
+ $SYSTEM 
+     timlim=525600 
+     mwords=100
+ $END 
+ $BASIS  gbasis=midi  $END 
+ $SCF    dirscf=.false.   $END 
+ $CIDRT  iexcit=2  ndoc=1 nval=3 mxnint=304422  group=c4v  $END 
+ $CIINP  nrnfg(6)=1  $END 
+ $GUGDM  nflgdm=1  $END 
+ $DATA 
+H2 
+CNV  4 
+ 
+H     1.0     0.00000     0.00000     0.7 
+H     1.0     0.00000     0.00000    -0.7 
+ $END 

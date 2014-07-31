@@ -13,6 +13,7 @@ import os
 import re
 import sys
 
+
 def get_coulomb_1rdm(occ, twoe):
 
     '''Calculate the exact coulomb energy and return the matrix already
@@ -64,101 +65,6 @@ def get_exact_nonjk(rdm2, twoe, nbf):
                 exact_njk[i, j] = gam - exch
     return 0.5*exact_njk
 
-def get_els_matrix(nocc, twoeno, homo):
-    '''Calculate the energy matrix from the ELS functional.'''
-    els = np.zeros((nocc.size, nocc.size), dtype=float)
-
-    for i in xrange(nocc.size):
-        els[i, i] = 0.5*nocc[i]*twoeno[ijkl(i,i,i,i)]
-        for j in xrange(i):
-            if i < homo and j < homo:
-                els[i, j] = -0.25*nocc[i]*nocc[j]*twoeno[ijkl(i,j,i,j)] +\
-                             0.5*nocc[i]*nocc[j]*twoeno[ijkl(i,i,j,j)]
-                els[j, i] = els[i, j]
-            elif j == homo and i > homo:
-                els[i, j] = -0.5*np.sqrt(nocc[i]*nocc[j])*twoeno[ijkl(i,j,i,j)] 
-                els[j, i] = els[i, j]
-            elif j > homo and i > homo:
-                els[i, j] = 0.5*np.sqrt(nocc[i]*nocc[j])*twoeno[ijkl(i,j,i,j)] 
-                els[j, i] = els[i, j]
-            else:
-                els[i, j] = -0.5*np.sqrt(nocc[i]*nocc[j])*twoeno[ijkl(i,j,i,j)] +\
-                           0.5*nocc[i]*nocc[j]*twoeno[ijkl(i,i,j,j)] 
-                els[j, i] = els[i, j]
-    return els
-
-def get_els2_matrix(nocc, twoeno, homo):
-
-    '''Calculate the energy matrix from the ELS functional.'''
-
-    els = np.zeros((nocc.size, nocc.size), dtype=float)
-
-    for i in xrange(nocc.size):
-        els[i, i] = 0.5*nocc[i]*twoeno[ijkl(i,i,i,i)]
-        for j in xrange(i):
-            if i < homo and j < homo:
-                els[i, j] = -0.25*nocc[i]*nocc[j]*twoeno[ijkl(i,j,i,j)] +\
-                             0.5*nocc[i]*nocc[j]*twoeno[ijkl(i,i,j,j)]
-                els[j, i] = els[i, j]
-            elif j == homo and i > homo:
-                els[i, j] = -0.5*np.sqrt(nocc[i]*nocc[j])*twoeno[ijkl(i,j,i,j)] 
-                els[j, i] = els[i, j]
-            elif j > homo and i > homo:
-                els[i, j] = 0.5*np.sqrt(nocc[i]*nocc[j])*twoeno[ijkl(i,j,i,j)] 
-                els[j, i] = els[i, j]
-            else:
-                els[i, j] = -0.25*nocc[i]*nocc[j]*twoeno[ijkl(i,j,i,j)] +\
-                           0.5*nocc[i]*nocc[j]*twoeno[ijkl(i,i,j,j)] 
-                els[j, i] = els[i, j]
-    return els
-
-def get_else_matrix(nocc, twoeno, homo, a, b):
-    '''Calculate the energy matrix from the ELS functional.'''
-    els = np.zeros((nocc.size, nocc.size), dtype=float)
-
-    for i in xrange(nocc.size):
-        els[i, i] = 0.5*nocc[i]*twoeno[ijkl(i,i,i,i)]
-        for j in xrange(i):
-            if i < homo and j < homo:
-                els[i, j] = -0.25*nocc[i]*nocc[j]*twoeno[ijkl(i,j,i,j)] +\
-                             0.5*nocc[i]*nocc[j]*twoeno[ijkl(i,i,j,j)]
-                els[j, i] = els[i, j]
-            elif j == homo and i > homo:
-                els[i, j] = -0.5*np.sqrt(nocc[i]*nocc[j])*twoeno[ijkl(i,j,i,j)] 
-                els[j, i] = els[i, j]
-            elif j > homo and i > homo:
-                els[i, j] = 0.5*np.sqrt(nocc[i]*nocc[j])*twoeno[ijkl(i,j,i,j)] 
-                els[j, i] = els[i, j]
-            else:
-                els[i, j] = -0.5*np.sqrt(nocc[i]*nocc[j])*twoeno[ijkl(i,j,i,j)] +\
-                             0.5*(np.sqrt(nocc[i]*nocc[j])-0.5*nocc[i]*nocc[j]) *\
-                             twoeno[ijkl(i,j,i,j)]*pade_ac3(a,b,0.5*nocc[i]-0.5) +\
-                           0.5*nocc[i]*nocc[j]*twoeno[ijkl(i,i,j,j)] 
-                els[j, i] = els[i, j]
-    return els
-
-def get_functional12_matrix(nocc, twoeno, homo, a):
-    '''Calculate the energy matrix from the ELS12 functional.'''
-    els = np.zeros((nocc.size, nocc.size), dtype=float)
-
-    for i in xrange(nocc.size):
-        els[i, i] = 0.5*nocc[i]*twoeno[ijkl(i,i,i,i)]
-        for j in xrange(i):
-            if i < homo and j < homo:
-                els[i, j] = -0.25*nocc[i]*nocc[j]*twoeno[ijkl(i,j,i,j)] +\
-                             0.5*nocc[i]*nocc[j]*twoeno[ijkl(i,i,j,j)]
-                els[j, i] = els[i, j]
-            elif j == homo and i > homo:
-                els[i, j] = -0.5*np.sqrt(nocc[i]*nocc[j])*twoeno[ijkl(i,j,i,j)] 
-                els[j, i] = els[i, j]
-            elif j > homo and i > homo:
-                els[i, j] = 0.5*np.sqrt(nocc[i]*nocc[j])*twoeno[ijkl(i,j,i,j)] 
-                els[j, i] = els[i, j]
-            else:
-                els[i, j] = (-0.5*np.sqrt(nocc[i]*nocc[j])-a*0.25*nocc[i]*nocc[j])*twoeno[ijkl(i,j,i,j)] +\
-                           0.5*nocc[i]*nocc[j]*twoeno[ijkl(i,i,j,j)] 
-                els[j, i] = els[i, j]
-    return els
 
 def get_functional12sin_matrix(nocc, twoeno, homo, a):
 

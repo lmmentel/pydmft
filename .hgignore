@@ -1,6 +1,8 @@
 syntax: glob
 # do not keep build directory created by foray under version control
-example/**
+pydmft.egg-info/**
+build/**
+dist/**
 *.x
 *.a
 *.so
@@ -11,7 +13,7 @@ example/**
 *.mod
 # ignore the latex byproduct files
 *.aux
-*.log
+#*.log
 *.bbl
 *.blg
 *.fls

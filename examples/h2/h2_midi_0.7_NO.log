@@ -1,0 +1,590 @@
+----- GAMESS execution script 'rungms' -----
+This job is running on host doreen
+under operating system Linux at czw, 13 lut 2014, 03:33:20 CET
+Available scratch disk space (Kbyte units) at beginning of the job is
+System plików  1K-blocks     użyte dostępne %uż. zamont. na
+/dev/sda5      264208320 205979320 44784960  83% /home
+GAMESS temporary binary files will be written to /home/lmentel/scratch
+GAMESS supplementary output files will be written to /home/lmentel/scratch
+Copying input file h2_midi_0.7_NO.inp to your run's scratch directory...
+cp h2_midi_0.7_NO.inp /home/lmentel/scratch/h2_midi_0.7_NO.F05
+unset echo
+/home/lmentel/Programs/gamess-us-may2013/ddikick.x /home/lmentel/Programs/gamess-us-may2013/gamess.01.x h2_midi_0.7_NO -ddi 1 1 doreen -scr /home/lmentel/scratch
+
+ Distributed Data Interface kickoff program.
+ Initiating 1 compute processes on 1 nodes to run the following command:
+ /home/lmentel/Programs/gamess-us-may2013/gamess.01.x h2_midi_0.7_NO 
+
+          ******************************************************
+          *         GAMESS VERSION =  1 MAY 2013 (R1)          *
+          *             FROM IOWA STATE UNIVERSITY             *
+          * M.W.SCHMIDT, K.K.BALDRIDGE, J.A.BOATZ, S.T.ELBERT, *
+          *   M.S.GORDON, J.H.JENSEN, S.KOSEKI, N.MATSUNAGA,   *
+          *          K.A.NGUYEN, S.J.SU, T.L.WINDUS,           *
+          *       TOGETHER WITH M.DUPUIS, J.A.MONTGOMERY       *
+          *         J.COMPUT.CHEM.  14, 1347-1363(1993)        *
+          **************** 64 BIT LINUX VERSION ****************
+
+  SINCE 1993, STUDENTS AND POSTDOCS WORKING AT IOWA STATE UNIVERSITY
+  AND ALSO IN THEIR VARIOUS JOBS AFTER LEAVING ISU HAVE MADE IMPORTANT
+  CONTRIBUTIONS TO THE CODE:
+     IVANA ADAMOVIC, CHRISTINE AIKENS, YURI ALEXEEV, POOJA ARORA,
+     ANDREY ASADCHEV, ROB BELL, PRADIPTA BANDYOPADHYAY, JONATHAN BENTZ,
+     BRETT BODE, GALINA CHABAN, WEI CHEN, CHEOL HO CHOI, PAUL DAY,
+     ALBERT DEFUSCO, TIM DUDLEY, DMITRI FEDOROV, GRAHAM FLETCHER,
+     MARK FREITAG, KURT GLAESEMANN, DAN KEMP, GRANT MERRILL,
+     NORIYUKI MINEZAWA, JONATHAN MULLIN, TAKESHI NAGATA,
+     SEAN NEDD, HEATHER NETZLOFF, BOSILJKA NJEGIC, RYAN OLSON, MIKE PAK,
+     JIM SHOEMAKER, LYUDMILA SLIPCHENKO, SAROM SOK, JIE SONG,
+     TETSUYA TAKETSUGU, SIMON WEBB, SOOHAENG YOO, FEDERICO ZAHARIEV
+
+  ADDITIONAL CODE HAS BEEN PROVIDED BY COLLABORATORS IN OTHER GROUPS:
+     IOWA STATE UNIVERSITY:
+          JOE IVANIC, LAIMUTIS BYTAUTAS, KLAUS RUEDENBERG
+     UNIVERSITY OF TOKYO: KIMIHIKO HIRAO, TAKAHITO NAKAJIMA,
+          TAKAO TSUNEDA, MUNEAKI KAMIYA, SUSUMU YANAGISAWA,
+          KIYOSHI YAGI, MAHITO CHIBA, SEIKEN TOKURA, NAOAKI KAWAKAMI
+     UNIVERSITY OF AARHUS: FRANK JENSEN
+     UNIVERSITY OF IOWA: VISVALDAS KAIRYS, HUI LI
+     NATIONAL INST. OF STANDARDS AND TECHNOLOGY: WALT STEVENS, DAVID GARMER
+     UNIVERSITY OF PISA: BENEDETTA MENNUCCI, JACOPO TOMASI
+     UNIVERSITY OF MEMPHIS: HENRY KURTZ, PRAKASHAN KORAMBATH
+     UNIVERSITY OF ALBERTA: TOBY ZENG, MARIUSZ KLOBUKOWSKI
+     UNIVERSITY OF NEW ENGLAND: MARK SPACKMAN
+     MIE UNIVERSITY: HIROAKI UMEDA
+     MICHIGAN STATE UNIVERSITY:
+          KAROL KOWALSKI, MARTA WLOCH, JEFFREY GOUR, JESSE LUTZ,
+          WEI LI, PIOTR PIECUCH
+     UNIVERSITY OF SILESIA: MONIKA MUSIAL, STANISLAW KUCHARSKI
+     FACULTES UNIVERSITAIRES NOTRE-DAME DE LA PAIX:
+          OLIVIER QUINET, BENOIT CHAMPAGNE
+     UNIVERSITY OF CALIFORNIA - SANTA BARBARA: BERNARD KIRTMAN
+     INSTITUTE FOR MOLECULAR SCIENCE:
+          KAZUYA ISHIMURA, MICHIO KATOUDA, AND SHIGERU NAGASE
+     UNIVERSITY OF NOTRE DAME: DAN CHIPMAN
+     KYUSHU UNIVERSITY:
+          HARUYUKI NAKANO,
+          FENG LONG GU, JACEK KORCHOWIEC, MARCIN MAKOWSKI, AND YURIKO AOKI,
+          HIROTOSHI MORI AND EISAKU MIYOSHI
+     PENNSYLVANIA STATE UNIVERSITY:
+          TZVETELIN IORDANOV, CHET SWALINA, JONATHAN SKONE,
+          SHARON HAMMES-SCHIFFER
+     WASEDA UNIVERSITY:
+          MASATO KOBAYASHI, TOMOKO AKAMA, TSUGUKI TOUMA,
+          TAKESHI YOSHIKAWA, YASUHIRO IKABATA, HIROMI NAKAI
+     NANJING UNIVERSITY: SHUHUA LI
+     UNIVERSITY OF NEBRASKA:
+          PEIFENG SU, DEJUN SI, NANDUN THELLAMUREGE, YALI WANG, HUI LI
+     UNIVERSITY OF ZURICH:
+          ROBERTO PEVERATI, KIM BALDRIDGE
+     N. COPERNICUS UNIVERSITY AND JACKSON STATE UNIVERSITY:
+          MARIA BARYSZ
+
+ EXECUTION OF GAMESS BEGUN Thu Feb 13 03:33:20 2014
+
+            ECHO OF THE FIRST FEW INPUT CARDS -
+ INPUT CARD> $CONTRL                                                                        
+ INPUT CARD>     scftyp=none                                                                
+ INPUT CARD>     runtyp=energy                                                              
+ INPUT CARD>     maxit=30                                                                   
+ INPUT CARD>     mult=1                                                                     
+ INPUT CARD>     ispher=-1                                                                  
+ INPUT CARD>     units=bohr                                                                 
+ INPUT CARD>     cityp=guga                                                                 
+ INPUT CARD> $END                                                                           
+ INPUT CARD> $SYSTEM                                                                        
+ INPUT CARD>     timlim=525600                                                              
+ INPUT CARD>     mwords=100                                                                 
+ INPUT CARD> $END                                                                           
+ INPUT CARD> $BASIS  gbasis=midi  $END                                                      
+ INPUT CARD> $SCF    dirscf=.false.   $END                                                  
+ INPUT CARD> $CIDRT  iexcit=2  ndoc=1 nval=3 mxnint=304422  group=c4v  $END                 
+ INPUT CARD> $CIINP  nrnfg(6)=1  $END                                                       
+ INPUT CARD> $GUGDM  nflgdm=1  $END                                                         
+ INPUT CARD> $DATA                                                                          
+ INPUT CARD>H2                                                                              
+ INPUT CARD>CNV  4                                                                          
+ INPUT CARD>                                                                                
+ INPUT CARD>H     1.0     0.00000     0.00000     0.7                                       
+ INPUT CARD>H     1.0     0.00000     0.00000    -0.7                                       
+ INPUT CARD> $END                                                                           
+ INPUT CARD>                                                                                
+ INPUT CARD> $GUESS guess=moread norb=4 $END                                                
+ INPUT CARD>                                                                                
+ INPUT CARD> $VEC                                                                           
+ INPUT CARD> 1  1 1.25315595E-01 1.76504594E+00-1.25315595E-01-1.76504594E+00               
+ INPUT CARD> 2  1 2.70900148E-01 3.21024607E-01 2.70900148E-01 3.21024607E-01               
+ INPUT CARD> 3  1 1.12847628E+00-1.35886622E+00-1.12847628E+00 1.35886622E+00               
+ INPUT CARD> 4  1 7.66071377E-01-6.46457765E-01 7.66071377E-01-6.46457765E-01               
+ INPUT CARD> $END                                                                           
+  100000000 WORDS OF MEMORY AVAILABLE
+
+     BASIS OPTIONS
+     -------------
+     GBASIS=MIDI         IGAUSS=       0      POLAR=NONE    
+     NDFUNC=       0     NFFUNC=       0     DIFFSP=       F
+     NPFUNC=       0      DIFFS=       F     BASNAM=        
+
+
+     RUN TITLE
+     ---------
+ H2                                                                              
+
+ THE POINT GROUP OF THE MOLECULE IS CNV     
+ THE ORDER OF THE PRINCIPAL AXIS IS     4
+
+ ATOM      ATOMIC                      COORDINATES (BOHR)
+           CHARGE         X                   Y                   Z
+ H           1.0     0.0000000000        0.0000000000        0.7000000000
+ H           1.0     0.0000000000        0.0000000000       -0.7000000000
+
+          INTERNUCLEAR DISTANCES (ANGS.)
+          ------------------------------
+
+                1 H          2 H     
+
+   1 H       0.0000000    0.7408481 *
+   2 H       0.7408481 *  0.0000000  
+
+  * ... LESS THAN  3.000
+
+
+     ATOMIC BASIS SET
+     ----------------
+ THE CONTRACTED PRIMITIVE FUNCTIONS HAVE BEEN UNNORMALIZED
+ THE CONTRACTED BASIS FUNCTIONS ARE NOW NORMALIZED TO UNITY
+
+  SHELL TYPE  PRIMITIVE        EXPONENT          CONTRACTION COEFFICIENT(S)
+
+ H         
+
+      1   S       1             4.5018000    0.156285427224
+      1   S       2             0.6814440    0.904690578596
+
+      2   S       3             0.1513980    1.000000000000
+
+ H         
+
+      3   S       4             4.5018000    0.156285427224
+      3   S       5             0.6814440    0.904690578596
+
+      4   S       6             0.1513980    1.000000000000
+
+ TOTAL NUMBER OF BASIS SET SHELLS             =    4
+ NUMBER OF CARTESIAN GAUSSIAN BASIS FUNCTIONS =    4
+ NUMBER OF ELECTRONS                          =    2
+ CHARGE OF MOLECULE                           =    0
+ SPIN MULTIPLICITY                            =    1
+ NUMBER OF OCCUPIED ORBITALS (ALPHA)          =    1
+ NUMBER OF OCCUPIED ORBITALS (BETA )          =    1
+ TOTAL NUMBER OF ATOMS                        =    2
+ THE NUCLEAR REPULSION ENERGY IS        0.7142857143
+
+ THIS MOLECULE IS RECOGNIZED AS BEING LINEAR,
+ ORBITAL LZ DEGENERACY TOLERANCE ETOLLZ= 1.00E-06
+
+     $CONTRL OPTIONS
+     ---------------
+ SCFTYP=NONE         RUNTYP=ENERGY       EXETYP=RUN     
+ MPLEVL=       0     CITYP =GUGA         CCTYP =NONE         VBTYP =NONE    
+ DFTTYP=NONE         TDDFT =NONE    
+ MULT  =       1     ICHARG=       0     NZVAR =       0     COORD =UNIQUE  
+ PP    =NONE         RELWFN=NONE         LOCAL =NONE         NUMGRD=       F
+ ISPHER=      -1     NOSYM =       0     MAXIT =      30     UNITS =BOHR    
+ PLTORB=       F     MOLPLT=       F     AIMPAC=       F     FRIEND=        
+ NPRINT=       7     IREST =       0     GEOM  =INPUT   
+ NORMF =       0     NORMP =       0     ITOL  =      20     ICUT  =       9
+ INTTYP=BEST         GRDTYP=BEST         QMTTOL= 1.0E-06
+
+     $SYSTEM OPTIONS
+     ---------------
+  REPLICATED MEMORY=   100000000 WORDS (ON EVERY NODE).
+ DISTRIBUTED MEMDDI=           0 MILLION WORDS IN AGGREGATE,
+ MEMDDI DISTRIBUTED OVER   1 PROCESSORS IS           0 WORDS/PROCESSOR.
+ TOTAL MEMORY REQUESTED ON EACH PROCESSOR=   100000000 WORDS.
+ TIMLIM=      525600.00 MINUTES, OR     365.0 DAYS.
+ PARALL= F  BALTYP=  DLB     KDIAG=    0  COREFL= F
+ MXSEQ2=     300 MXSEQ3=     150
+
+          ----------------
+          PROPERTIES INPUT
+          ----------------
+
+     MOMENTS            FIELD           POTENTIAL          DENSITY
+ IEMOM =       1   IEFLD =       0   IEPOT =       0   IEDEN =       0
+ WHERE =COMASS     WHERE =NUCLEI     WHERE =NUCLEI     WHERE =NUCLEI  
+ OUTPUT=BOTH       OUTPUT=BOTH       OUTPUT=BOTH       OUTPUT=BOTH    
+ IEMINT=       0   IEFINT=       0                     IEDINT=       0
+                                                       MORB  =       0
+          EXTRAPOLATION IN EFFECT
+ ORBITAL PRINTING OPTION: NPREO=     1     4     2     1
+
+     -------------------------------
+     INTEGRAL TRANSFORMATION OPTIONS
+     -------------------------------
+     NWORD  =            0
+     CUTOFF = 1.0E-09     MPTRAN =       0
+     DIRTRF =       F     AOINTS =DUP     
+
+          ----------------------
+          INTEGRAL INPUT OPTIONS
+          ----------------------
+ NOPK  =       1 NORDER=       0 SCHWRZ=       F
+
+     ------------------------------------------
+     THE POINT GROUP IS CNV, NAXIS= 4, ORDER= 8
+     ------------------------------------------
+
+     DIMENSIONS OF THE SYMMETRY SUBSPACES ARE
+ A1  =    4     A2  =    0     B1  =    0     B2  =    0     E   =    0
+
+ ..... DONE SETTING UP THE RUN .....
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 100.00%
+
+          ********************
+          1 ELECTRON INTEGRALS
+          ********************
+ ...... END OF ONE-ELECTRON INTEGRALS ......
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 100.00%
+
+          -------------
+          GUESS OPTIONS
+          -------------
+          GUESS =MOREAD            NORB  =       4          NORDER=       0
+          MIX   =       F          PRTMO =       F          PUNMO =       F
+          TOLZ  = 1.0E-08          TOLE  = 1.0E-05
+          SYMDEN=       F          PURIFY=       F
+
+ INITIAL GUESS ORBITALS GENERATED BY MOREAD   ROUTINE.
+
+ SYMMETRIES FOR INITIAL GUESS ORBITALS FOLLOW.   BOTH SET(S).
+     1 ORBITALS ARE OCCUPIED (    0 CORE ORBITALS).
+     1=A1       2=A1       3=A1       4=A1  
+ ...... END OF INITIAL ORBITAL SELECTION ......
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS   0.00%
+
+                    ----------------------
+                    AO INTEGRAL TECHNOLOGY
+                    ----------------------
+     S,P,L SHELL ROTATED AXIS INTEGRALS, REPROGRAMMED BY
+        KAZUYA ISHIMURA (IMS) AND JOSE SIERRA (SYNSTAR).
+     S,P,D,L SHELL ROTATED AXIS INTEGRALS PROGRAMMED BY
+        KAZUYA ISHIMURA (INSTITUTE FOR MOLECULAR SCIENCE).
+     S,P,D,F,G SHELL TO TOTAL QUARTET ANGULAR MOMENTUM SUM 5,
+        ERIC PROGRAM BY GRAHAM FLETCHER (ELORET AND NASA ADVANCED
+        SUPERCOMPUTING DIVISION, AMES RESEARCH CENTER).
+     S,P,D,F,G,L SHELL GENERAL RYS QUADRATURE PROGRAMMED BY
+        MICHEL DUPUIS (PACIFIC NORTHWEST NATIONAL LABORATORY).
+
+          --------------------
+          2 ELECTRON INTEGRALS
+          --------------------
+
+ THE -PK- OPTION IS OFF, THE INTEGRALS ARE NOT IN SUPERMATRIX FORM.
+ STORING   15000 INTEGRALS/RECORD ON DISK, USING 12 BYTES/INTEGRAL.
+ TWO ELECTRON INTEGRAL EVALUATION REQUIRES   89366 WORDS OF MEMORY.
+ II,JST,KST,LST =  1  1  1  1 NREC =         1 INTLOC =    1
+ II,JST,KST,LST =  2  1  1  1 NREC =         1 INTLOC =    2
+ II,JST,KST,LST =  3  1  1  1 NREC =         1 INTLOC =    7
+ II,JST,KST,LST =  4  1  1  1 NREC =         1 INTLOC =   22
+ TOTAL NUMBER OF NONZERO TWO-ELECTRON INTEGRALS =                  55
+          1 INTEGRAL RECORDS WERE STORED ON DISK FILE  8.
+  ...... END OF TWO-ELECTRON INTEGRALS .....
+ STEP CPU TIME =     0.02 TOTAL CPU TIME =        0.0 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.0 SECONDS, CPU UTILIZATION IS 100.00%
+
+ GUGA CI OPTIONS      NRNFG     NPFLG
+ ------------------------------------
+
+ -DRT- TABLE          1         0
+ TRANSFORMATION       1         0
+ ENERGY MATRIX        1         0
+ DIAGONALIZATION      1         0
+ 1E-DENSITY MATRIX    1         0
+ 2E-DENSITY MATRIX    1         0
+ LAGRANGIAN MATRIX    0         0
+------------------------------------
+
+ -DRT- TABLE          0         0
+ TRANSFORMATION   
+
+          -----------------------     ----------------------------
+          GUGA DISTINCT ROW TABLE     WRITTEN BY B.R.BROOKS,P.SAXE
+          -----------------------     ----------------------------
+
+      GROUP=C4V          NPRT=       0
+       FORS=       F   INTACT=       F
+       FOCI=       F   MXNINT=  304422
+       SOCI=       F   MXNEME=   10000
+     IEXCIT=       2
+
+      -CORE-    -INTERNAL-  -EXTERNAL-
+     NFZC=   0   NDOC=   1   NEXT=   0
+     NMCC=   0   NAOS=   0   NFZV=   0
+                 NBOS=   0
+                 NALP=   0
+                 NVAL=   3
+
+ THE MAXIMUM ELECTRON EXCITATION WILL BE   2
+
+ SYMMETRIES FOR THE   0 CORE,   4 ACTIVE,   0 EXTERNAL MO-S ARE
+   ACTIVE= A1    A1    A1    A1  
+           DOC   VAL   VAL   VAL 
+
+ MOLECULAR CHARGE          =    0
+ NUMBER OF ALPHA ELECTRONS =    1
+ NUMBER OF  BETA ELECTRONS =    1
+
+ THE ELECTRONIC STATE IS  1-A1  
+ THE ELECTRONIC STATE IS  1-B1  
+
+ UNABLE TO MAKE AN UNAMBIGUOUS DETERMINATION OF THE 
+ SPATIAL SYMMETRY IN THIS NONABELIAN GROUP.
+
+ THE DISTINCT ROW TABLE HAS        11 ROWS.
+  THE WAVEFUNCTION CONTAINS        10 WALKS (CSF-S).
+
+ TOTAL NUMBER OF INTEGRALS =         73
+ NUMBER OF INTEGRALS/GROUP =         73
+ NUMBER OF INTEGRAL GROUPS =          1
+ MAXIMUM RECORD SIZES ARE     500 FOR UNIT 11      22 FOR UNIT 12
+                            30001 FOR UNIT 15   30001 FOR UNIT 16
+ ...... END OF -DRT- GENERATION ...... 
+ STEP CPU TIME =     0.39 TOTAL CPU TIME =        0.4 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.4 SECONDS, CPU UTILIZATION IS 100.00%
+
+     --------------------------------------------
+     PARTIAL TWO ELECTRON INTEGRAL TRANSFORMATION
+     --------------------------------------------
+
+ NUMBER OF CORE MOLECULAR ORBITALS     =    0
+ NUMBER OF OCCUPIED MOLECULAR ORBITALS =    4
+ TOTAL NUMBER OF MOLECULAR ORBITALS    =    4
+ TOTAL NUMBER OF ATOMIC ORBITALS       =    4
+ THRESHOLD FOR KEEPING TRANSFORMED 2E- INTEGRALS = 1.000E-09
+ AO INTEGRALS WILL BE READ IN FROM DISK...
+
+ PLAN A: REQUIREMENTS FOR FULLY IN-MEMORY TRANSFORMATION:
+ # OF WORDS AVAILABLE =            100000000
+ # OF WORDS NEEDED    =                60250
+
+ CHOOSING IN MEMORY PARTIAL TRANSFORMATION...
+ TOTAL NUMBER OF TRANSFORMED 2E- INTEGRALS KEPT =           31
+ ... END OF INTEGRAL TRANSFORMATION ...
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.4 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.4 SECONDS, CPU UTILIZATION IS 100.00%
+
+          ------------------------
+          GUGA-CI INTEGRAL SORTING
+          ------------------------
+
+    334495 WORDS NEEDED TO SORT             73 GUGA INTEGRALS IN MEMORY
+ 100000000 WORDS ARE AVAILABLE
+ CHOOSING IN-MEMORY SORTING...
+ IN CORE ALGORITHM SORTED             10 NON-ZERO 1E- INTEGRALS
+ IN CORE ALGORITHM SORTED             31 NON-ZERO 2E- INTEGRALS
+ ...... END OF INTEGRAL SORTING ...... 
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.4 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.4 SECONDS, CPU UTILIZATION IS  97.62%
+
+ -------------------------     ---------------------------------------
+ ENERGY MATRIX CALCULATION     WRITTEN BY B.R.BROOKS,W.D.LAIDIG,P.SAXE
+ -------------------------     ---------------------------------------
+
+ COMPUTING THE HAMILTONIAN FOR THE        10 CSF-S...
+
+          71 IS THE TOTAL NUMBER OF GENERATED LOOPS
+          71 WERE CREATED BY THE LOOP-DRIVEN ALGORITHM
+           0 WERE CREATED IMPLICITLY
+
+          41 IS THE TOTAL NUMBER OF PROCESSED LOOPS
+          16     DIAGONAL LOOPS ARE STORED ON WORK15 IN     1 BUFFERS OF  10000 ELEMENTS.
+          25 OFF DIAGONAL LOOPS ARE STORED ON WORK16 IN     1 BUFFERS OF  10000 ELEMENTS.
+ ...... END OF ENERGY MATRIX CALCULATION ...... 
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.4 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.4 SECONDS, CPU UTILIZATION IS  97.62%
+
+          -----------------------------------------
+          DAVIDSON METHOD CI-MATRIX DIAGONALIZATION
+                   WRITTEN BY STEVE ELBERT
+          -----------------------------------------
+ NUMBER OF STATES REQUESTED =     1
+ MAX. NUMB. OF EXPAN. VEC   =    30
+ MAX. NUMB. IMPROVED STATES =     1
+ MAX. NUMB. OF ITERATIONS   =    50
+ CONVERGENCE CRITERION      =    1.0E-06
+
+ CHOOSING TO SOLVE SECULAR EQUATION IN MEMORY
+ NUMBER OF WORDS AVAILABLE =  100000000
+ NUMBER OF WORDS USED      =      31135
+ ENERGY MATRIX BUFFER SIZE =      10000
+ SOLUTION FOUND WITH DIRECT METHOD
+
+ STATE #    1  ENERGY =      -1.146289530
+
+      CSF      COEF    OCCUPANCY (IGNORING CORE)
+      ---      ----    --------- --------- -----
+        1        -7.3467348164E-02  2000
+        4         6.7268178319E-02  1010
+        8         1.3904759765E-01  0101
+       10         9.8326784975E-01  0200
+
+ RENORMALIZED DAVIDSON CORRECTION FOR     1-REFERENCE CI.
+ C0SQ= 0.966816 EREF=       -1.104069 E-E(REF)=   0.042220 E(Q)=   0.001449
+ GIVES A E(SD+Q) ESTIMATE OF       -1.1477386689
+ ...... END OF CI-MATRIX DIAGONALIZATION ......
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.4 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.4 SECONDS, CPU UTILIZATION IS  97.62%
+
+          --------------------------------------
+          CI DENSITY MATRIX AND NATURAL ORBITALS
+          --------------------------------------
+ PROPERTIES WILL BE COMPUTED FOR STATE -IROOT-   1 WITH E=       -1.1462895297
+ NFLGDM=   1
+ NWORD=         0  IBLOCK=   0
+ NUMBER OF STATES         =      1
+ NUMBER OF CONFIGURATIONS =     10
+
+          CI EIGENSTATE    1 TOTAL ENERGY =       -1.1462895297
+          DENSITY MATRIX OF STATE   1 SAVED FOR PROPERTY ANALYSIS
+
+          NATURAL ORBITALS IN ATOMIC ORBITAL BASIS
+          ----------------------------------------
+
+                      1          2          3          4
+                    1.9336     0.0000     0.0000     0.0000
+                     A          A          A          A   
+    1  H  1  S    0.270900   0.766071  -0.887437  -0.708250
+    2  H  1  S    0.321025  -0.646458  -0.284493   2.209291
+    3  H  2  S    0.270900   0.766071   0.887437   0.708250
+    4  H  2  S    0.321025  -0.646458   0.284493  -2.209291
+ ...... END OF DENSITY MATRIX CALCULATION ...... 
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.4 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.4 SECONDS, CPU UTILIZATION IS  97.62%
+
+          -------------------------------------
+          2-PARTICLE DENSITY MATRIX CALCULATION
+          -------------------------------------
+ 2 BODY DENSITY IS AN AVERAGE OF  1 STATE(S).
+   STATE    WEIGHT          ENERGY
+     1    1.000000       -1.1462895297
+           71 -DM2- LOOPS WERE GENERATED
+           71 WERE CREATED BY THE LOOP-DRIVEN ALGORITHM
+            0 WERE CREATED IMPLICITLY
+          1 RECORDS OF LENGTH304422 WRITTEN TO FILE 15
+ ...... END OF 2-PARTICLE DENSITY MATRIX CALCULATION ......
+ STEP CPU TIME =     0.01 TOTAL CPU TIME =        0.4 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.4 SECONDS, CPU UTILIZATION IS 100.00%
+
+          ----------------------------------
+          2-PARTICLE DENSITY MATRIX LABELING
+          ----------------------------------
+     350872 WORDS NEEDED TO LABEL DM2 MATRIX
+          1 RECORDS OF LENGTH304422  READ FROM FILE 15
+          1 RECORDS OF LENGTH 15000 WRITTEN TO FILE 16
+ ...... END OF 2-PARTICLE DENSITY MATRIX LABELING ......
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.4 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.4 SECONDS, CPU UTILIZATION IS 100.00%
+
+          --------------
+          -DM2- ORDERING
+          --------------
+      30066 WORDS NEEDED ( 100000000 AVAILABLE) TO ORDER DM2 IN MEMORY
+ CHOOSING IN MEMORY ORDERING...
+                               1 RECORDS OF LENGTH 15000  READ FROM FILE 16
+         22 DM2 VALUES IN      1 RECORDS OF LENGTH 15000 WRITTEN TO FILE 15
+ ...... END OF -DM2- ORDERING ...... 
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.4 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.4 SECONDS, CPU UTILIZATION IS 100.00%
+
+     --------------------------------------------------------
+     GUGA  CI PROPERTIES...FOR THE WAVEFUNCTION OF STATE    1
+               USING THE EXPECTATION VALUE DENSITY
+     --------------------------------------------------------
+
+          -----------------
+          ENERGY COMPONENTS
+          -----------------
+
+         WAVEFUNCTION NORMALIZATION =       0.9668156643
+
+                ONE ELECTRON ENERGY =      -2.3299946179
+                TWO ELECTRON ENERGY =       0.4694193739
+           NUCLEAR REPULSION ENERGY =       0.7142857143
+                                      ------------------
+                       TOTAL ENERGY =      -1.1462895297
+
+ ELECTRON-ELECTRON POTENTIAL ENERGY =       0.4694193739
+  NUCLEUS-ELECTRON POTENTIAL ENERGY =      -3.1959126745
+   NUCLEUS-NUCLEUS POTENTIAL ENERGY =       0.7142857143
+                                      ------------------
+             TOTAL POTENTIAL ENERGY =      -2.0122075863
+               TOTAL KINETIC ENERGY =       0.8659180566
+                 VIRIAL RATIO (V/T) =       2.3237852253
+
+          ---------------------------------------
+          MULLIKEN AND LOWDIN POPULATION ANALYSES
+          ---------------------------------------
+
+               ----- POPULATIONS IN EACH AO -----
+                             MULLIKEN      LOWDIN
+              1  H  1  S      0.40212     0.40212
+              2  H  1  S      0.56470     0.56470
+              3  H  2  S      0.40212     0.40212
+              4  H  2  S      0.56470     0.56470
+
+          ----- MULLIKEN ATOMIC OVERLAP POPULATIONS -----
+          (OFF-DIAGONAL ELEMENTS NEED TO BE MULTIPLIED BY 2)
+
+             1           2
+
+    1    0.5584047
+    2    0.4084109   0.5584047
+
+          TOTAL MULLIKEN AND LOWDIN ATOMIC POPULATIONS
+       ATOM         MULL.POP.    CHARGE          LOW.POP.     CHARGE
+    1 H             0.966816    0.033184         0.966816    0.033184
+    2 H             0.966816    0.033184         0.966816    0.033184
+
+          ---------------------
+          ELECTROSTATIC MOMENTS
+          ---------------------
+
+ POINT   1           X           Y           Z (BOHR)    CHARGE
+                 0.000000    0.000000    0.000000        0.07 (A.U.)
+         DX          DY          DZ         /D/  (DEBYE)
+     0.000000    0.000000   -0.000000    0.000000
+ ...... END OF PROPERTY EVALUATION ......
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =        0.4 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        0.4 SECONDS, CPU UTILIZATION IS  97.67%
+               580000  WORDS OF DYNAMIC MEMORY USED
+ EXECUTION OF GAMESS TERMINATED NORMALLY Thu Feb 13 03:33:20 2014
+ DDI: 263624 bytes (0.3 MB / 0 MWords) used by master data server.
+
+ ----------------------------------------
+ CPU timing information for all processes
+ ========================================
+ 0: 0.156 + 0.356 = 0.512
+ ----------------------------------------
+ ddikick.x: exited gracefully.
+unset echo
+----- accounting info -----
+Files used on the master node doreen were:
+-rw-r--r-- 1 lmentel lmentel     951 lut 13 03:33 /home/lmentel/scratch/h2_midi_0.7_NO.dat
+-rwxr-xr-x 1 lmentel lmentel     797 lut 13 03:33 /home/lmentel/scratch/h2_midi_0.7_NO.F05*
+-rw-r--r-- 1 lmentel lmentel  180016 lut 13 03:33 /home/lmentel/scratch/h2_midi_0.7_NO.F08
+-rw-r--r-- 1 lmentel lmentel  180104 lut 13 03:33 /home/lmentel/scratch/h2_midi_0.7_NO.F09
+-rw-r--r-- 1 lmentel lmentel 1701440 lut 13 03:33 /home/lmentel/scratch/h2_midi_0.7_NO.F10
+-rw-r--r-- 1 lmentel lmentel  276264 lut 13 03:33 /home/lmentel/scratch/h2_midi_0.7_NO.F11
+-rw-r--r-- 1 lmentel lmentel     272 lut 13 03:33 /home/lmentel/scratch/h2_midi_0.7_NO.F12
+-rw-r--r-- 1 lmentel lmentel 2435384 lut 13 03:33 /home/lmentel/scratch/h2_midi_0.7_NO.F14
+-rw-r--r-- 1 lmentel lmentel  180104 lut 13 03:33 /home/lmentel/scratch/h2_midi_0.7_NO.F15
+-rw-r--r-- 1 lmentel lmentel  180104 lut 13 03:33 /home/lmentel/scratch/h2_midi_0.7_NO.F16
+ls: No match.
+ls: No match.
+ls: No match.
+czw, 13 lut 2014, 03:33:23 CET
+0.0u 0.0s 0:03.58 0.5% 0+0k 0+10072io 0pf+0w
