@@ -1,4 +1,4 @@
-PyDMFT - Python utilities for DMFT
-==================================
+PyDMFT - Python utilities for running DMFT calculations
+=======================================================
 
-
+DMFT : Density Matrix Functional Theory 
