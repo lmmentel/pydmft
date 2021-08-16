@@ -4,9 +4,15 @@ version = "0.1.0"
 description = "Python package for running post-CI DMFT calculations"
 authors = ["Lukasz Mentel <lmmentel@gmail.com>"]
 license = "MIT"
+readme = "README.rst"
+homepage = "https://github.com/lmmentel/pydmft"
+repository = "https://github.com/lmmentel/pydmft"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.8,<3.10"
+numpy = "^1.21.2"
+matplotlib = "^3.4.3"
+scipy = "^1.7.1"
 
 [tool.poetry.dev-dependencies]
 black = "^21.6b0"
